@@ -80,8 +80,8 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_55%),linear-gradient(180deg,hsl(var(--background)),hsl(var(--background)))]">
-      <div className="mx-auto w-full max-w-3xl space-y-8 p-4 md:p-8">
-        <header className="flex flex-wrap items-start justify-between gap-4">
+      <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-6 md:p-8">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
             <p className="text-sm font-semibold text-muted-foreground">資金管理MVP</p>
             <h1 className="text-2xl font-bold md:text-3xl">建玉と損切りのおすすめ計算</h1>
@@ -92,7 +92,7 @@ export default function Page() {
           <button
             type="button"
             onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
-            className="shrink-0 rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5"
+            className="w-full rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
             aria-label="テーマ切り替え"
           >
             {theme === "dark" ? "ライトモード" : "ダークモード"}
@@ -105,7 +105,7 @@ export default function Page() {
             <p className="text-xs text-muted-foreground">モードによって初期設定（安全寄り度合い）が変わります</p>
           </div>
           <Tabs value={mode} onValueChange={(value) => setMode(value as Mode)}>
-            <TabsList className="w-full">
+            <TabsList className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
               <TabsTrigger value="stock" className="w-full">
                 {MODE_LABELS.stock}
               </TabsTrigger>
