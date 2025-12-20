@@ -113,7 +113,7 @@ export default function Page() {
                 {MODE_LABELS.fx}
               </TabsTrigger>
             </TabsList>
-            <TabsContent value={mode}>
+            <TabsContent value={mode} className="mt-6">
               <div className="space-y-6">
                 <section className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
                   <h2 className="text-lg font-semibold">基本入力（必須）</h2>
