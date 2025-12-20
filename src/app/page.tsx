@@ -17,14 +17,45 @@ import { getDefaultsForMode } from "@/lib/defaults";
 import { loadState, saveState } from "@/lib/storage";
 import type { CalculationInputsUI, Mode } from "@/lib/types";
 
+type ThemeMode = "light" | "dark";
+
 const MODE_LABELS: Record<Mode, string> = {
   stock: "優待イベント投資（株）",
   fx: "先物・FX（Backtesting.py）",
 };
 
+const THEME_STORAGE_KEY = "mm_mvp_theme";
+
+function applyTheme(theme: ThemeMode) {
+  if (typeof document === "undefined") return;
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
+
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") return "light";
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // Ignore storage failures.
+  }
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  return prefersDark ? "dark" : "light";
+}
+
 export default function Page() {
   const [mode, setMode] = useState<Mode>("stock");
   const [inputs, setInputs] = useState<CalculationInputsUI>(getDefaultsForMode("stock"));
+  const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
+
+  useEffect(() => {
+    applyTheme(theme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Ignore storage failures.
+    }
+  }, [theme]);
 
   useEffect(() => {
     const stored = loadState(mode);
@@ -48,14 +79,24 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_55%),linear-gradient(180deg,hsl(var(--background)),hsl(var(--background)))]">
       <div className="mx-auto w-full max-w-3xl space-y-8 p-4 md:p-8">
-        <header className="space-y-2">
-          <p className="text-sm font-semibold text-muted-foreground">資金管理MVP</p>
-          <h1 className="text-2xl font-bold md:text-3xl">建玉と損切りのおすすめ計算</h1>
-          <p className="text-sm text-muted-foreground">
-            勝率と平均損益から、無理のない1回の取引量を提案します
-          </p>
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-muted-foreground">資金管理MVP</p>
+            <h1 className="text-2xl font-bold md:text-3xl">建玉と損切りのおすすめ計算</h1>
+            <p className="text-sm text-muted-foreground">
+              勝率と平均損益から、無理のない1回の取引量を提案します
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
+            className="shrink-0 rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5"
+            aria-label="テーマ切り替え"
+          >
+            {theme === "dark" ? "ライトモード" : "ダークモード"}
+          </button>
         </header>
 
         <section className="space-y-4">
@@ -74,7 +115,7 @@ export default function Page() {
             </TabsList>
             <TabsContent value={mode}>
               <div className="space-y-6">
-                <section className="space-y-4 rounded-lg border bg-white p-4">
+                <section className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
                   <h2 className="text-lg font-semibold">基本入力（必須）</h2>
                   <div className="grid gap-4">
                     <Field
@@ -151,7 +192,7 @@ export default function Page() {
                   </div>
                 </section>
 
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion type="single" collapsible className="w-full rounded-2xl border bg-card px-5">
                   <AccordionItem value="advanced">
                     <AccordionTrigger>詳細設定</AccordionTrigger>
                     <AccordionContent>
@@ -249,7 +290,7 @@ export default function Page() {
             riskAmount={outputs?.risk_amount_yen ?? null}
           />
           <DetailAccordion outputs={outputs} />
-          <div className="rounded-lg border bg-white p-4 text-sm text-muted-foreground">
+          <div className="rounded-2xl border bg-card p-4 text-sm text-muted-foreground">
             この推奨は利益や安全を保証するものではありません。入力値と相場状況により結果は変わります。
           </div>
         </section>
