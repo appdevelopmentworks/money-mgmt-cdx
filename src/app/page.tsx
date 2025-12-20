@@ -105,11 +105,11 @@ export default function Page() {
             <p className="text-xs text-muted-foreground">モードによって初期設定（安全寄り度合い）が変わります</p>
           </div>
           <Tabs value={mode} onValueChange={(value) => setMode(value as Mode)}>
-            <TabsList className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
-              <TabsTrigger value="stock" className="w-full">
+            <TabsList className="grid h-auto w-full grid-cols-1 items-stretch gap-2 sm:grid-cols-2">
+              <TabsTrigger value="stock" className="w-full whitespace-normal py-2 text-center leading-snug">
                 {MODE_LABELS.stock}
               </TabsTrigger>
-              <TabsTrigger value="fx" className="w-full">
+              <TabsTrigger value="fx" className="w-full whitespace-normal py-2 text-center leading-snug">
                 {MODE_LABELS.fx}
               </TabsTrigger>
             </TabsList>
