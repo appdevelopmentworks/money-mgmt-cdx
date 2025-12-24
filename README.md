@@ -5,7 +5,9 @@ A Next.js 16 (App Router) + TypeScript MVP that calculates position sizing and s
 ## Features
 - Instant client-side calculation
 - Mode switch (stock / futures-FX)
-- Mode-specific LocalStorage persistence
+- User manual at `/manual`
+- LocalStorage persistence for capital/stop line/advanced settings only
+- DD-based loss display when max drawdown is provided
 - Validation and warnings
 
 ## Tech
