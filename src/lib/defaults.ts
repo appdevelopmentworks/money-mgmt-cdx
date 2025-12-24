@@ -6,6 +6,10 @@ const BASE_DEFAULTS = {
   p_percent: 55,
   W_percent: 1.8,
   D_percent: 1.2,
+  max_dd_percent: Number.NaN,
+  ev_percent: Number.NaN,
+  atr_percent: Number.NaN,
+  max_loss_streak: Number.NaN,
 };
 
 export const DEFAULTS_STOCK: CalculationInputsUI = {

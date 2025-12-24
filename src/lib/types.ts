@@ -7,6 +7,10 @@ export interface CalculationInputsUI {
   p_percent: number;
   W_percent: number;
   D_percent: number;
+  max_dd_percent: number;
+  ev_percent: number;
+  atr_percent: number;
+  max_loss_streak: number;
   N: number;
   alpha_percent: number;
   k: number;
@@ -21,6 +25,7 @@ export interface CalculationInputsNorm {
   p: number;
   W: number;
   D: number;
+  max_dd: number;
   b: number;
   N: number;
   alpha: number;
@@ -33,6 +38,7 @@ export interface CalculationOutputs {
   stop_percent: number;
   position_notional_yen: number;
   risk_amount_yen: number;
+  risk_amount_source: "dd" | "f";
   f: number;
   b: number;
   EV_percent: number;
@@ -49,5 +55,5 @@ export interface ValidationResult {
 
 export interface SavedState {
   version: 1;
-  inputs: CalculationInputsUI;
+  inputs: Partial<CalculationInputsUI>;
 }

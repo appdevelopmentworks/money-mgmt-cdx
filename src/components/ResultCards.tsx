@@ -5,11 +5,19 @@ interface ResultCardsProps {
   positionNotional: number | null;
   stopPercent: number | null;
   riskAmount: number | null;
+  riskAmountSource?: "dd" | "f";
 }
 
 const YEN_SYMBOL = "\u00a5";
 
-export function ResultCards({ positionNotional, stopPercent, riskAmount }: ResultCardsProps) {
+export function ResultCards({ positionNotional, stopPercent, riskAmount, riskAmountSource }: ResultCardsProps) {
+  const title =
+    riskAmountSource === "dd" ? "最大DD換算の想定損失" : "1回で最大いくら負ける？";
+  const description =
+    riskAmountSource === "dd"
+      ? "最大ドローダウン（%）を資金に掛けた目安です"
+      : "資金に対する最大損失（%）もあわせて確認しましょう";
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <Card>
@@ -36,8 +44,8 @@ export function ResultCards({ positionNotional, stopPercent, riskAmount }: Resul
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>1回で最大いくら負ける？</CardTitle>
-          <CardDescription>資金に対する最大損失（%）もあわせて確認しましょう</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-3xl font-semibold">

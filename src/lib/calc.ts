@@ -10,6 +10,7 @@ export function normalize(ui: CalculationInputsUI): CalculationInputsNorm {
   const p = ui.p_percent / 100;
   const alpha = ui.alpha_percent / 100;
   const f_user_max = ui.f_user_max_percent / 100;
+  const max_dd = ui.max_dd_percent / 100;
 
   const W = ui.W_percent;
   const D = ui.D_percent;
@@ -22,6 +23,7 @@ export function normalize(ui: CalculationInputsUI): CalculationInputsNorm {
     p,
     W,
     D,
+    max_dd,
     b,
     N: ui.N,
     alpha,
@@ -61,7 +63,8 @@ export function computeRecommendations(norm: CalculationInputsNorm): Calculation
 
   const f = Math.min(f_kelly_cap, f_floor, norm.f_user_max);
 
-  const risk_amount_yen = f * norm.E0;
+  const useDdRisk = Number.isFinite(norm.max_dd) && norm.max_dd > 0;
+  const risk_amount_yen = useDdRisk ? norm.max_dd * norm.E0 : f * norm.E0;
   const position_notional_yen = stop_percent > 0 ? risk_amount_yen / (stop_percent / 100) : 0;
 
   const EV_percent = p * norm.W - (1 - p) * norm.D;
@@ -77,6 +80,7 @@ export function computeRecommendations(norm: CalculationInputsNorm): Calculation
     stop_percent,
     position_notional_yen,
     risk_amount_yen,
+    risk_amount_source: useDdRisk ? "dd" : "f",
     f,
     b,
     EV_percent,

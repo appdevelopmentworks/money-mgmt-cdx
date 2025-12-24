@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Alerts } from "@/components/Alerts";
 import { DetailAccordion } from "@/components/DetailAccordion";
@@ -59,7 +60,8 @@ export default function Page() {
 
   useEffect(() => {
     const stored = loadState(mode);
-    setInputs(stored ?? getDefaultsForMode(mode));
+    const defaults = getDefaultsForMode(mode);
+    setInputs(stored ? { ...defaults, ...stored } : defaults);
   }, [mode]);
 
   useEffect(() => {
@@ -89,14 +91,22 @@ export default function Page() {
               勝率と平均損益から、無理のない1回の取引量を提案します
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
-            className="w-full rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
-            aria-label="テーマ切り替え"
-          >
-            {theme === "dark" ? "ライトモード" : "ダークモード"}
-          </button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
+            <Link
+              href="/manual"
+              className="w-full rounded-full border bg-background px-4 py-2 text-center text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
+            >
+              ユーザーマニュアル
+            </Link>
+            <button
+              type="button"
+              onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
+              className="w-full rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
+              aria-label="テーマ切り替え"
+            >
+              {theme === "dark" ? "ライトモード" : "ダークモード"}
+            </button>
+          </div>
         </header>
 
         <section className="space-y-4">
@@ -189,6 +199,66 @@ export default function Page() {
                         placeholder="1.2"
                       />
                     </Field>
+                    {mode === "fx" ? (
+                      <>
+                        <Field
+                          id="max_dd_percent"
+                          label="最大ドローダウン（DD）"
+                          helperText="最大の下落幅（%）"
+                        >
+                          <PercentInput
+                            value={inputs.max_dd_percent}
+                            onChange={(value) => update("max_dd_percent", value)}
+                            min={0}
+                            step={0.1}
+                            placeholder="8.3"
+                          />
+                        </Field>
+                        <Field
+                          id="ev_percent"
+                          label="1トレード平均損益（期待値）"
+                          helperText="1回あたりの平均損益（%）"
+                        >
+                          <PercentInput
+                            value={inputs.ev_percent}
+                            onChange={(value) => update("ev_percent", value)}
+                            step={0.1}
+                            placeholder="1.1"
+                          />
+                        </Field>
+                        <Field
+                          id="atr_percent"
+                          label="ボラティリティ（ATR）"
+                          helperText="平均ボラティリティ（%）"
+                        >
+                          <PercentInput
+                            value={inputs.atr_percent}
+                            onChange={(value) => update("atr_percent", value)}
+                            min={0}
+                            step={0.1}
+                            placeholder="2.8"
+                          />
+                        </Field>
+                        <Field id="max_loss_streak" label="最大連敗数" helperText="連敗の最大回数">
+                          <Input
+                            id="max_loss_streak"
+                            type="number"
+                            inputMode="numeric"
+                            value={Number.isFinite(inputs.max_loss_streak) ? inputs.max_loss_streak : ""}
+                            onChange={(event) => {
+                              const next = parseFloat(event.target.value);
+                              update(
+                                "max_loss_streak",
+                                Number.isNaN(next) ? Number.NaN : Math.max(0, Math.round(next))
+                              );
+                            }}
+                            min={0}
+                            step={1}
+                            placeholder="6"
+                          />
+                        </Field>
+                      </>
+                    ) : null}
                   </div>
                 </section>
 
@@ -288,6 +358,7 @@ export default function Page() {
             positionNotional={outputs?.position_notional_yen ?? null}
             stopPercent={outputs?.stop_percent ?? null}
             riskAmount={outputs?.risk_amount_yen ?? null}
+            riskAmountSource={outputs?.risk_amount_source}
           />
           <DetailAccordion outputs={outputs} />
           <div className="rounded-2xl border bg-card p-4 text-sm text-muted-foreground">
