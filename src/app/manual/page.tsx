@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-const SECTIONS = [
+const INPUT_SECTIONS = [
   {
     title: "はじめの資金（円）",
-    body: "運用に使う元手です。この金額を基準に、1回あたりの許容損失と建玉金額を計算します。",
+    body: "最初の元手です。ここを基準に、1回の許容損失と建玉金額を計算します。",
   },
   {
     title: "停止ライン（%）",
-    body: "資金がここを下回ったら運用停止とみなします。高いほど安全寄りですが、すぐ停止しやすくなります。",
+    body: "資金がこの%を下回ったら運用停止とみなします。高いほど安全寄りですが止まりやすくなります。",
   },
   {
     title: "勝率（%）",
@@ -15,27 +15,27 @@ const SECTIONS = [
   },
   {
     title: "勝ったときの平均利益（%）",
-    body: "1回の勝ちトレードで平均何%増えるか。複利やレバ込みの結果でもOKです。",
+    body: "勝ったときに平均で何%増えるかです。複利やレバ込みの結果でもOKです。",
   },
   {
     title: "負けたときの平均損失（%）",
-    body: "1回の負けトレードで平均何%減るか。マイナス記号は不要です。",
+    body: "負けたときに平均で何%減るかです。マイナス記号は不要です。",
   },
   {
     title: "最大ドローダウン（DD）（%）",
-    body: "期間全体での最大下落幅です。入力すると「最大DD換算の想定損失」に反映されます。",
+    body: "先物・FXで使う値です。期間全体での最大下落幅で、想定損失の計算に使います。",
   },
   {
     title: "1トレード平均損益（期待値）（%）",
-    body: "1回あたりの平均損益です。Backtesting.pyの期待値に近い値を入力します。",
+    body: "先物・FXで使う値です。1回あたりの平均損益で、Backtesting.pyの期待値に近い値を入力します。",
   },
   {
     title: "ボラティリティ（ATR）（%）",
-    body: "平均的な値動きの大きさです。将来的なストップ幅の参考に使います。",
+    body: "先物・FXで使う値です。平均的な値動きの大きさで、ストップ幅の参考に使います。",
   },
   {
     title: "最大連敗数",
-    body: "過去の検証で確認できた最大の連敗回数です。",
+    body: "先物・FXで使う値です。検証期間で一番長かった連敗回数です。",
   },
   {
     title: "想定トレード回数（回）",
@@ -57,6 +57,9 @@ const SECTIONS = [
     title: "1回の最大損失（資金に対して%）",
     body: "どんな場合でも1回でこれ以上失わない上限です。",
   },
+];
+
+const OUTPUT_SECTIONS = [
   {
     title: "建玉（投入額）の目安",
     body: "損切り幅と許容損失から逆算した投入額の目安です。",
@@ -92,7 +95,7 @@ export default function ManualPage() {
         <section className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
           <h2 className="text-lg font-semibold">入力項目</h2>
           <div className="space-y-4 text-sm">
-            {SECTIONS.slice(0, 14).map((item) => (
+            {INPUT_SECTIONS.map((item) => (
               <div key={item.title} className="space-y-1">
                 <p className="font-semibold">{item.title}</p>
                 <p className="text-muted-foreground">{item.body}</p>
@@ -104,7 +107,7 @@ export default function ManualPage() {
         <section className="space-y-4 rounded-2xl border bg-card p-5 shadow-sm">
           <h2 className="text-lg font-semibold">結果の見方</h2>
           <div className="space-y-4 text-sm">
-            {SECTIONS.slice(14).map((item) => (
+            {OUTPUT_SECTIONS.map((item) => (
               <div key={item.title} className="space-y-1">
                 <p className="font-semibold">{item.title}</p>
                 <p className="text-muted-foreground">{item.body}</p>

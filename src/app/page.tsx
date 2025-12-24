@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { Moon, Sun } from "lucide-react";
 
 import { Alerts } from "@/components/Alerts";
 import { DetailAccordion } from "@/components/DetailAccordion";
@@ -101,10 +102,20 @@ export default function Page() {
             <button
               type="button"
               onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
-              className="w-full rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-full border bg-background px-4 py-2 text-xs font-semibold shadow-sm transition hover:-translate-y-0.5 sm:w-auto"
               aria-label="テーマ切り替え"
             >
-              {theme === "dark" ? "ライトモード" : "ダークモード"}
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-4 w-4" />
+                  <span className="sr-only">ライトモード</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-4 w-4" />
+                  <span className="sr-only">ダークモード</span>
+                </>
+              )}
             </button>
           </div>
         </header>
