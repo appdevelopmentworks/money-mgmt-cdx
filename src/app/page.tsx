@@ -210,21 +210,22 @@ export default function Page() {
                         placeholder="1.2"
                       />
                     </Field>
+                    <Field
+                      id="max_dd_percent"
+                      label="最大ドローダウン（DD）"
+                      helperText="最大の下落幅（%）"
+                      tooltip="DDが分かる場合は入力すると、1回の許容損失（円）をDD基準で計算します"
+                    >
+                      <PercentInput
+                        value={inputs.max_dd_percent}
+                        onChange={(value) => update("max_dd_percent", value)}
+                        min={0}
+                        step={0.1}
+                        placeholder="8.3"
+                      />
+                    </Field>
                     {mode === "fx" ? (
                       <>
-                        <Field
-                          id="max_dd_percent"
-                          label="最大ドローダウン（DD）"
-                          helperText="最大の下落幅（%）"
-                        >
-                          <PercentInput
-                            value={inputs.max_dd_percent}
-                            onChange={(value) => update("max_dd_percent", value)}
-                            min={0}
-                            step={0.1}
-                            placeholder="8.3"
-                          />
-                        </Field>
                         <Field
                           id="ev_percent"
                           label="1トレード平均損益（期待値）"

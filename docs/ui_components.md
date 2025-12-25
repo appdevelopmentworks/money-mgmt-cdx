@@ -37,7 +37,7 @@
   - `placeholder?: string`
 
 ### 3.2 PercentInput（%）
-- 例: L, p, W, D, alpha, f_user_max
+- 例: L, p, W, D, DD, alpha, f_user_max
 - UI:
   - `Input` + suffix `"%"`（またはInput右側にUnit表示）
 - Props: MoneyInput同様

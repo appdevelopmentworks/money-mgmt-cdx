@@ -21,6 +21,7 @@ export interface CalculationInputsUI {
   p_percent: number;           // 勝率（%）例: 55
   W_percent: number;           // 勝ったときの平均利益（%）
   D_percent: number;           // 負けたときの平均損失（%）※正の値
+  max_dd_percent: number;       // 最大ドローダウン（%）※任意
 
   // 詳細（任意・デフォあり）
   N: number;                   // 想定トレード回数
@@ -41,6 +42,7 @@ export interface CalculationInputsNorm {
   p: number;      // 0〜1
   W: number;      // percent (e.g. 1.8 means 1.8%)
   D: number;      // percent (positive)
+  max_dd: number; // 0〜1（最大ドローダウン）
   b: number;      // W/D
 
   N: number;
@@ -88,6 +90,7 @@ export function normalize(ui: CalculationInputsUI): CalculationInputsNorm {
   const p = ui.p_percent / 100;
   const alpha = ui.alpha_percent / 100;
   const f_user_max = ui.f_user_max_percent / 100;
+  const max_dd = ui.max_dd_percent / 100;
 
   const W = ui.W_percent;
   const D = ui.D_percent;
@@ -100,6 +103,7 @@ export function normalize(ui: CalculationInputsUI): CalculationInputsNorm {
     p,
     W,
     D,
+    max_dd,
     b,
     N: ui.N,
     alpha,
@@ -162,7 +166,9 @@ export function computeRecommendations(norm: CalculationInputsNorm): Calculation
   const f = Math.min(f_kelly_cap, f_floor, norm.f_user_max);
 
   // 5) 建玉
-  const risk_amount_yen = f * norm.E0;
+  const risk_from_f = f * norm.E0;
+  const risk_from_dd = norm.max_dd > 0 ? norm.max_dd * norm.E0 : Number.POSITIVE_INFINITY;
+  const risk_amount_yen = Math.min(risk_from_f, risk_from_dd);
   const position_notional_yen =
     stop_percent > 0 ? (risk_amount_yen / (stop_percent / 100)) : 0;
 

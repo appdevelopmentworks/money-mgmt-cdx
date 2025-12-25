@@ -64,7 +64,9 @@ export function computeRecommendations(norm: CalculationInputsNorm): Calculation
   const f = Math.min(f_kelly_cap, f_floor, norm.f_user_max);
 
   const useDdRisk = Number.isFinite(norm.max_dd) && norm.max_dd > 0;
-  const risk_amount_yen = useDdRisk ? norm.max_dd * norm.E0 : f * norm.E0;
+  const risk_amount_from_f = f * norm.E0;
+  const risk_amount_from_dd = useDdRisk ? norm.max_dd * norm.E0 : Number.POSITIVE_INFINITY;
+  const risk_amount_yen = Math.min(risk_amount_from_f, risk_amount_from_dd);
   const position_notional_yen = stop_percent > 0 ? risk_amount_yen / (stop_percent / 100) : 0;
 
   const EV_percent = p * norm.W - (1 - p) * norm.D;
@@ -80,7 +82,7 @@ export function computeRecommendations(norm: CalculationInputsNorm): Calculation
     stop_percent,
     position_notional_yen,
     risk_amount_yen,
-    risk_amount_source: useDdRisk ? "dd" : "f",
+    risk_amount_source: risk_amount_yen === risk_amount_from_dd ? "dd" : "f",
     f,
     b,
     EV_percent,
